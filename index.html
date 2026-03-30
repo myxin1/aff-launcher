@@ -80,6 +80,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 textarea{resize:vertical;min-height:80px}
 select option{background:var(--surface)}
 .hint{font-size:.75rem;color:var(--dim);margin-top:4px;line-height:1.4}
+.geo-chart{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.geo-chart-title{font-size:.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.geo-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.geo-flag{font-size:1.1rem;width:22px;text-align:center;flex-shrink:0}
+.geo-lang{font-size:.8rem;font-weight:600;width:90px;flex-shrink:0}
+.geo-bar-wrap{flex:1;background:var(--border);border-radius:4px;height:8px;overflow:hidden}
+.geo-bar-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.geo-vol{font-size:.78rem;color:var(--dim);width:70px;text-align:right;flex-shrink:0}
+.geo-top-badge{display:inline-block;background:var(--accent-dim);color:var(--accent);border-radius:3px;padding:1px 6px;font-size:.68rem;font-weight:700;margin-left:6px}
 .btn-gen-desc{margin-top:8px;background:var(--surface2);border:1px dashed var(--accent);color:var(--accent);border-radius:8px;padding:8px 14px;font-size:.8rem;font-weight:600;cursor:pointer;transition:.2s;text-align:left}
 .btn-gen-desc:hover{background:var(--accent-dim)}
 .desc-suggestion{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:.85rem;color:var(--text);cursor:pointer;transition:.2s;line-height:1.5}
@@ -539,6 +548,9 @@ footer strong{color:var(--accent)}
 
       <!-- Métricas de volume / concorrência -->
       <div class="kw-metrics" id="kwMetrics"></div>
+
+      <!-- Gráfico geo de buscas por idioma -->
+      <div id="kwGeoChart" style="display:none;margin-top:16px"></div>
 
       <!-- Campos editáveis -->
       <div class="grid" style="margin-top:16px">
@@ -2579,6 +2591,49 @@ function renderKWMetrics(data){
       <div class="kw-metric-sub">para afiliados entrantes</div>
       <div class="kw-metric-bar"><div class="kw-metric-bar-fill" style="width:${v.opp==='Alta'?85:v.opp==='Boa'?65:40}%;background:${oppColor}"></div></div>
     </div>`;
+
+  renderGeoChart(data);
+}
+
+function renderGeoChart(data){
+  const wrap = document.getElementById('kwGeoChart');
+  if (!wrap) return;
+  const v = data.volEstimate;
+  if (!v) { wrap.style.display='none'; return; }
+
+  // Distribuição estimada por idioma/região (% relativa típica para SaaS/afiliados)
+  const totalBase = v.review + v.pricing;
+  const langs = [
+    { flag:'🇺🇸', label:'English (EN)', pct:0.52, color:'#b0f95a', countries:'EUA · Reino Unido · Canadá · Austrália' },
+    { flag:'🇧🇷', label:'Português (PT)', pct:0.14, color:'#4ade80', countries:'Brasil · Portugal' },
+    { flag:'🇪🇸', label:'Español (ES)', pct:0.13, color:'#34d399', countries:'México · Argentina · Espanha' },
+    { flag:'🇩🇪', label:'Deutsch (DE)', pct:0.07, color:'#facc15', countries:'Alemanha · Áustria · Suíça' },
+    { flag:'🇫🇷', label:'Français (FR)', pct:0.06, color:'#fb923c', countries:'França · Bélgica · Suíça' },
+    { flag:'🇮🇹', label:'Italiano (IT)', pct:0.04, color:'#f87171', countries:'Itália' },
+    { flag:'🇯🇵', label:'日本語 (JA)', pct:0.025, color:'#c084fc', countries:'Japão' },
+    { flag:'🇳🇱', label:'Nederlands (NL)', pct:0.025, color:'#60a5fa', countries:'Holanda · Bélgica' },
+  ];
+
+  const maxPct = langs[0].pct;
+  const rows = langs.map((l, i) => {
+    const vol = Math.round(totalBase * l.pct);
+    const volFmt = vol >= 1000 ? '~'+(vol/1000).toFixed(1)+'k' : '~'+vol;
+    const barW = Math.round((l.pct / maxPct) * 100);
+    const isTop = i === 0;
+    return `<div class="geo-row" title="${l.countries}">
+      <span class="geo-flag">${l.flag}</span>
+      <span class="geo-lang">${l.label}${isTop ? '<span class="geo-top-badge">+buscado</span>' : ''}</span>
+      <div class="geo-bar-wrap"><div class="geo-bar-fill" style="width:${barW}%;background:${l.color}"></div></div>
+      <span class="geo-vol">${volFmt}/mês</span>
+    </div>`;
+  }).join('');
+
+  wrap.innerHTML = `<div class="geo-chart">
+    <div class="geo-chart-title">🌍 Onde esta keyword é mais buscada</div>
+    ${rows}
+    <p class="hint" style="margin-top:8px">Estimativas relativas baseadas em padrões globais de busca para o nicho. Passe o mouse para ver os países.</p>
+  </div>`;
+  wrap.style.display = 'block';
 }
 
 function renderLongTails(kws){
