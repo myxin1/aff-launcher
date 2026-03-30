@@ -108,17 +108,14 @@ select option{background:var(--surface)}
 .block-title{font-size:.72rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;display:flex;align-items:center;gap:7px}
 .block-title::before{content:'';display:inline-block;width:5px;height:5px;background:var(--accent);border-radius:50%}
 
-/* ── Language Cards ── */
-.lang-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
-.lang-card{border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;display:flex;align-items:center;gap:10px}
-.lang-card:hover{border-color:var(--accent)}
-.lang-card.active{border-color:var(--accent);background:var(--accent-dim)}
-.lang-card .flag{font-size:1.35rem;line-height:1;flex-shrink:0}
-.lang-card .lang-info{display:flex;flex-direction:column;gap:1px}
-.lang-card .name{font-size:.84rem;font-weight:700;color:var(--text)}
-.lang-card .code{font-size:.68rem;color:var(--dim)}
-.lang-card .lang-check{margin-left:auto;color:var(--accent);font-size:.8rem;font-weight:800;opacity:0;transition:opacity .15s}
-.lang-card.active .lang-check{opacity:1}
+/* ── Language Pills (radio-style multi-select) ── */
+.lang-pills{display:flex;flex-wrap:wrap;gap:8px}
+.lang-pill-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:.84rem;font-weight:600;cursor:pointer;user-select:none;transition:border-color .15s,background .15s,color .15s;font-family:inherit}
+.lang-pill-btn:hover{border-color:var(--dim);color:var(--text)}
+.lang-pill-btn.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+.lang-pill-btn .lp-flag{font-size:1.1rem;line-height:1}
+.lang-pill-btn .lp-check{font-size:.7rem;font-weight:900;margin-left:2px;opacity:0;transition:opacity .15s}
+.lang-pill-btn.active .lp-check{opacity:1}
 .badge-sm{background:var(--accent-dim);color:var(--accent);border-radius:3px;padding:1px 5px;font-size:.68rem;font-weight:700}
 
 /* ── SERP ── */
@@ -463,7 +460,8 @@ footer strong{color:var(--accent)}
   .summary-row{flex-direction:column;gap:2px}
   .summary-row .sv{text-align:left}
   /* Lang grid */
-  .lang-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
+  .lang-pills{gap:6px}
+  .lang-pill-btn{font-size:.78rem;padding:6px 11px}
   /* Checkbox group */
   .checkbox-item{padding:8px 10px}
   /* SILO */
@@ -527,7 +525,7 @@ footer strong{color:var(--accent)}
           <p class="hint">Cole a URL — UTM params são removidos automaticamente</p>
         </div>
         <div class="field">
-          <label>Keyword Principal</label>
+          <label>Palavra-chave Principal</label>
           <input type="text" id="mainKW" placeholder="Sugerida automaticamente pela URL…" />
           <p class="hint">Sugerida pela URL — editável livremente</p>
         </div>
@@ -858,15 +856,15 @@ footer strong{color:var(--accent)}
     </div>
     <div class="block">
       <div class="block-title">Selecione os idiomas do site</div>
-      <div class="lang-grid">
-        <div class="lang-card active" data-lang="en" data-name="English" onclick="toggleLang(this)"><span class="flag">🇺🇸</span><div class="lang-info"><span class="name">English</span><span class="code">EN · EUA / UK / AU</span></div><span class="lang-check">✓</span></div>
-        <div class="lang-card active" data-lang="pt" data-name="Português" onclick="toggleLang(this)"><span class="flag">🇧🇷</span><div class="lang-info"><span class="name">Português</span><span class="code">PT · Brasil / PT</span></div><span class="lang-check">✓</span></div>
-        <div class="lang-card active" data-lang="es" data-name="Español" onclick="toggleLang(this)"><span class="flag">🇪🇸</span><div class="lang-info"><span class="name">Español</span><span class="code">ES · LATAM / ES</span></div><span class="lang-check">✓</span></div>
-        <div class="lang-card active" data-lang="de" data-name="Deutsch" onclick="toggleLang(this)"><span class="flag">🇩🇪</span><div class="lang-info"><span class="name">Deutsch</span><span class="code">DE · DE / AT / CH</span></div><span class="lang-check">✓</span></div>
-        <div class="lang-card" data-lang="fr" data-name="Français" onclick="toggleLang(this)"><span class="flag">🇫🇷</span><div class="lang-info"><span class="name">Français</span><span class="code">FR · França / BE</span></div><span class="lang-check">✓</span></div>
-        <div class="lang-card" data-lang="it" data-name="Italiano" onclick="toggleLang(this)"><span class="flag">🇮🇹</span><div class="lang-info"><span class="name">Italiano</span><span class="code">IT · Itália</span></div><span class="lang-check">✓</span></div>
-        <div class="lang-card" data-lang="nl" data-name="Nederlands" onclick="toggleLang(this)"><span class="flag">🇳🇱</span><div class="lang-info"><span class="name">Nederlands</span><span class="code">NL · Holanda</span></div><span class="lang-check">✓</span></div>
-        <div class="lang-card" data-lang="ja" data-name="日本語" onclick="toggleLang(this)"><span class="flag">🇯🇵</span><div class="lang-info"><span class="name">日本語</span><span class="code">JA · Japão</span></div><span class="lang-check">✓</span></div>
+      <div class="lang-pills">
+        <button type="button" class="lang-pill-btn active" data-lang="en" data-name="English" onclick="toggleLang(this)"><span class="lp-flag">🇺🇸</span> English <span class="lp-check">✓</span></button>
+        <button type="button" class="lang-pill-btn active" data-lang="pt" data-name="Português" onclick="toggleLang(this)"><span class="lp-flag">🇧🇷</span> Português <span class="lp-check">✓</span></button>
+        <button type="button" class="lang-pill-btn active" data-lang="es" data-name="Español" onclick="toggleLang(this)"><span class="lp-flag">🇪🇸</span> Español <span class="lp-check">✓</span></button>
+        <button type="button" class="lang-pill-btn active" data-lang="de" data-name="Deutsch" onclick="toggleLang(this)"><span class="lp-flag">🇩🇪</span> Deutsch <span class="lp-check">✓</span></button>
+        <button type="button" class="lang-pill-btn" data-lang="fr" data-name="Français" onclick="toggleLang(this)"><span class="lp-flag">🇫🇷</span> Français <span class="lp-check">✓</span></button>
+        <button type="button" class="lang-pill-btn" data-lang="it" data-name="Italiano" onclick="toggleLang(this)"><span class="lp-flag">🇮🇹</span> Italiano <span class="lp-check">✓</span></button>
+        <button type="button" class="lang-pill-btn" data-lang="nl" data-name="Nederlands" onclick="toggleLang(this)"><span class="lp-flag">🇳🇱</span> Nederlands <span class="lp-check">✓</span></button>
+        <button type="button" class="lang-pill-btn" data-lang="ja" data-name="日本語" onclick="toggleLang(this)"><span class="lp-flag">🇯🇵</span> 日本語 <span class="lp-check">✓</span></button>
       </div>
     </div>
     <div id="kwGeoStep8" style="display:none"></div>
@@ -1405,7 +1403,7 @@ function renderSitePreview(){
 }
 
 function getActiveLangs(){
-  return Array.from(document.querySelectorAll('.lang-card.active')).map(c => ({lang: c.dataset.lang, name: c.dataset.name}));
+  return Array.from(document.querySelectorAll('.lang-pill-btn.active')).map(c => ({lang: c.dataset.lang, name: c.dataset.name}));
 }
 
 function renderSILOPriority(){
@@ -1918,7 +1916,7 @@ function stopTimer(){
 
 async function analyzeProduct(){
   const rawURL = document.getElementById('productURL_step1').value.trim();
-  if (!rawURL) { showAnalyzeStatus('error', 'Informe a URL do produto antes de analisar.'); return; }
+  if (!rawURL) { showAnalyzeStatus('error', 'Informe uma URL ou Palavra-chave antes de analisar.'); return; }
 
   const url  = cleanURL(rawURL);
   const btn  = document.getElementById('btnAnalyze');
@@ -2698,9 +2696,9 @@ function hideAnalyzeStatus(){
   document.getElementById('analyzeStatus').style.display = 'none';
 }
 
-function toggleLang(card){
-  card.classList.toggle('active');
-  const noneSelected = document.querySelectorAll('.lang-card.active').length === 0;
+function toggleLang(btn){
+  btn.classList.toggle('active');
+  const noneSelected = document.querySelectorAll('.lang-pill-btn.active').length === 0;
   const step8geo = document.getElementById('kwGeoStep8');
   if (step8geo) {
     if (noneSelected) {
