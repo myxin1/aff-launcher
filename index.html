@@ -30,6 +30,36 @@
   --btn-primary-bg:#5a9e00;--btn-primary-text:#fff;
   --shadow:0 4px 24px #0001;
 }
+[data-theme="midnight"]{
+  --bg:#06091a;--surface:#0e1330;--surface2:#090d22;--border:#1c2448;
+  --text:#c8d6f0;--muted:#6b82a8;--dim:#3d4f6e;--accent:#60a5fa;
+  --accent-dim:#60a5fa1a;--accent-border:#60a5fa44;
+  --green:#34d399;--green-dim:#0a2a20;--green-border:#34d39944;
+  --yellow:#fbbf24;--red:#f87171;
+  --header:#08111f;--step-done:#60a5fa;--step-active:#60a5fa;--step-inactive:#1c2448;
+  --btn-primary-bg:#60a5fa;--btn-primary-text:#06091a;
+  --shadow:0 4px 24px #00000a;
+}
+[data-theme="forest"]{
+  --bg:#040f0a;--surface:#091a10;--surface2:#06120c;--border:#143320;
+  --text:#c4e8d0;--muted:#5a8c6e;--dim:#2e5040;--accent:#34d399;
+  --accent-dim:#34d3991a;--accent-border:#34d39944;
+  --green:#6ee7b7;--green-dim:#052a18;--green-border:#6ee7b744;
+  --yellow:#fde68a;--red:#fca5a5;
+  --header:#040f0a;--step-done:#34d399;--step-active:#34d399;--step-inactive:#143320;
+  --btn-primary-bg:#34d399;--btn-primary-text:#040f0a;
+  --shadow:0 4px 24px #000a06;
+}
+[data-theme="sunset"]{
+  --bg:#12080a;--surface:#221016;--surface2:#190b10;--border:#3a1c24;
+  --text:#f0dce0;--muted:#9e6070;--dim:#5e3040;--accent:#fb7185;
+  --accent-dim:#fb71851a;--accent-border:#fb718544;
+  --green:#34d399;--green-dim:#0a2a18;--green-border:#34d39944;
+  --yellow:#fbbf24;--red:#fca5a5;
+  --header:#12080a;--step-done:#fb7185;--step-active:#fb7185;--step-inactive:#3a1c24;
+  --btn-primary-bg:#fb7185;--btn-primary-text:#12080a;
+  --shadow:0 4px 24px #0a0004;
+}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
 
 /* ── Header ── */
@@ -44,6 +74,16 @@ header{background:var(--header);border-bottom:1px solid var(--border);padding:14
 .credit strong{color:var(--accent)}
 .theme-btn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:.82rem;padding:7px 14px;border-radius:20px;cursor:pointer;transition:.2s;white-space:nowrap;display:flex;align-items:center;gap:6px;font-weight:500}
 .theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+.theme-switcher{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:50px;padding:5px 8px}
+.theme-dot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.2s;position:relative;flex-shrink:0}
+.theme-dot:hover{transform:scale(1.15)}
+.theme-dot.active{border-color:var(--text);box-shadow:0 0 0 2px var(--surface2)}
+.theme-dot[data-t="dark"]{background:#b0f95a}
+.theme-dot[data-t="light"]{background:#5a9e00}
+.theme-dot[data-t="midnight"]{background:#60a5fa}
+.theme-dot[data-t="forest"]{background:#34d399}
+.theme-dot[data-t="sunset"]{background:#fb7185}
+.theme-label{font-size:.72rem;color:var(--dim);padding:0 4px 0 6px;white-space:nowrap;font-weight:600;letter-spacing:.02em}
 
 /* ── Container ── */
 .container{max-width:780px;margin:0 auto;padding:40px 20px 80px}
@@ -491,7 +531,14 @@ footer strong{color:var(--accent)}
     </div>
   </div>
   <div class="header-right">
-    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn"><span id="themeIcon">🌙</span> <span id="themeTxt">Escuro</span></button>
+    <div class="theme-switcher" id="themeSwitcher">
+      <span class="theme-label">Tema</span>
+      <div class="theme-dot active" data-t="dark" title="Dark" onclick="applyTheme('dark')"></div>
+      <div class="theme-dot" data-t="light" title="Light" onclick="applyTheme('light')"></div>
+      <div class="theme-dot" data-t="midnight" title="Midnight" onclick="applyTheme('midnight')"></div>
+      <div class="theme-dot" data-t="forest" title="Forest" onclick="applyTheme('forest')"></div>
+      <div class="theme-dot" data-t="sunset" title="Sunset" onclick="applyTheme('sunset')"></div>
+    </div>
     <div class="credit">por <strong>Daniel</strong><br>v3.1 · 2026</div>
   </div>
 </header>
@@ -1026,21 +1073,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Theme from localStorage
   const saved = localStorage.getItem('launcher-theme');
-  if (saved === 'light') applyTheme('light');
-  else applyTheme('dark');
+  const valid = ['dark','light','midnight','forest','sunset'];
+  applyTheme(valid.includes(saved) ? saved : 'dark');
 });
 
 // ══════════════════════════════════════════════
 //  THEME
 // ══════════════════════════════════════════════
-function toggleTheme(){
-  const cur = document.documentElement.getAttribute('data-theme');
-  applyTheme(cur === 'dark' ? 'light' : 'dark');
-}
+function toggleTheme(){ applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'); }
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme', t);
   localStorage.setItem('launcher-theme', t);
-  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️ Modo Claro' : '🌙 Modo Escuro';
+  document.querySelectorAll('.theme-dot').forEach(d => d.classList.toggle('active', d.dataset.t === t));
 }
 
 // ══════════════════════════════════════════════
