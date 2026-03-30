@@ -307,11 +307,13 @@ select option{background:var(--surface)}
 [data-theme="light"] .lt-diff-med{background:#fef9c3;color:#ca8a04}
 [data-theme="light"] .lt-diff-hard{background:#fee2e2;color:#dc2626}
 /* ── KW Language Picker ── */
-.kw-lang-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);font-size:.82rem;font-weight:600;cursor:pointer;transition:.2s;user-select:none}
-.kw-lang-btn:hover{border-color:var(--accent);color:var(--text)}
+.kw-lang-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:.83rem;font-weight:600;cursor:pointer;transition:.15s;user-select:none;font-family:inherit}
+.kw-lang-btn:hover{border-color:var(--dim);color:var(--text)}
 .kw-lang-btn.active{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
-.kw-lang-btn .kl-flag{font-size:1.1rem;line-height:1}
+.kw-lang-btn .kl-flag{font-size:1.1rem;line-height:1;flex-shrink:0}
 .kw-lang-btn .kl-name{white-space:nowrap}
+.kw-lang-btn .kl-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0;transition:.15s}
+.kw-lang-btn.active .kl-check{background:var(--accent);border-color:var(--accent);color:#111;font-weight:900}
 /* ── History chips ── */
 .hist-chip{background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:.78rem;padding:5px 12px;border-radius:20px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px;max-width:240px}
 .hist-chip:hover{border-color:var(--accent);color:var(--text)}
@@ -431,8 +433,6 @@ footer strong{color:var(--accent)}
   /* KW lang picker — wrap tightly */
   #kwLangPicker{gap:6px}
   .kw-lang-btn{padding:6px 10px;font-size:.76rem}
-  .kw-lang-btn .kl-name{display:none}
-  .kw-lang-btn .kl-flag{font-size:1.3rem}
   /* Metrics */
   .kw-metrics{grid-template-columns:1fr 1fr}
   .kw-metric-value{font-size:.95rem}
@@ -509,13 +509,13 @@ footer strong{color:var(--accent)}
   <div class="step-card active" id="step-1">
     <div class="step-header">
       <div class="step-number">Etapa 1 de 9</div>
-      <div class="step-title">KW Principal</div>
+      <div class="step-title">URL de Análise ou Palavra-chave Principal</div>
       <div class="step-desc">Informe a URL do projeto ou produto. A KW principal será sugerida automaticamente. Clique em <strong>Analisar</strong> para extrair as informações e gerar a estrutura de conteúdo.</div>
     </div>
 
     <!-- ── Bloco: Idioma + URL ── -->
     <div class="block">
-      <div class="block-title">Idioma principal das keywords</div>
+      <div class="block-title">Idioma principal da Palavra-chave</div>
       <div id="kwLangPicker" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"></div>
       <div class="grid">
         <div class="field">
@@ -2151,6 +2151,7 @@ function buildKWLangPicker(){
   wrap.innerHTML = KW_LANGS.map(l => `
     <button class="kw-lang-btn${l.code === selectedKWLang ? ' active' : ''}"
       onclick="selectKWLang('${l.code}')" data-kwlang="${l.code}">
+      <span class="kl-check">${l.code === selectedKWLang ? '✓' : ''}</span>
       <span class="kl-flag">${l.flag}</span>
       <span class="kl-name">${l.name}</span>
     </button>`).join('');
@@ -2159,7 +2160,10 @@ function buildKWLangPicker(){
 function selectKWLang(code){
   selectedKWLang = code;
   document.querySelectorAll('.kw-lang-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.kwlang === code);
+    const isActive = b.dataset.kwlang === code;
+    b.classList.toggle('active', isActive);
+    const check = b.querySelector('.kl-check');
+    if (check) check.textContent = isActive ? '✓' : '';
   });
   // Re-render long-tails if already analyzed
   const name = document.getElementById('productName')?.value;
