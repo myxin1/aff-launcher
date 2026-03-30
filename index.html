@@ -831,10 +831,10 @@ footer strong{color:var(--accent)}
     <div class="step-header">
       <div class="step-number">Etapa 8 de 9</div>
       <div class="step-title">Idiomas do Site e Posts</div>
-      <div class="step-desc">Selecione os idiomas que o seu site vai ter. EN é obrigatório e é sempre o idioma principal.</div>
+      <div class="step-desc">Selecione os idiomas que o seu site vai ter. <strong>Dica: desmarque todos os idiomas para ver em quais países e idiomas a sua keyword é mais buscada.</strong></div>
     </div>
     <div class="lang-grid">
-      <div class="lang-card active locked" data-lang="en" data-name="English" onclick="toggleLang(this)"><div class="flag">🇺🇸</div><div class="name">English</div><div class="code">EN <span class="badge-sm">obrigatório</span></div></div>
+      <div class="lang-card active" data-lang="en" data-name="English" onclick="toggleLang(this)"><div class="flag">🇺🇸</div><div class="name">English</div><div class="code">EN</div></div>
       <div class="lang-card active" data-lang="pt" data-name="Português" onclick="toggleLang(this)"><div class="flag">🇧🇷</div><div class="name">Português</div><div class="code">PT</div></div>
       <div class="lang-card active" data-lang="es" data-name="Español" onclick="toggleLang(this)"><div class="flag">🇪🇸</div><div class="name">Español</div><div class="code">ES</div></div>
       <div class="lang-card active" data-lang="de" data-name="Deutsch" onclick="toggleLang(this)"><div class="flag">🇩🇪</div><div class="name">Deutsch</div><div class="code">DE</div></div>
@@ -2671,8 +2671,10 @@ function hideAnalyzeStatus(){
 }
 
 function toggleLang(card){
-  if (card.classList.contains('locked')) return;
   card.classList.toggle('active');
+  const noneSelected = document.querySelectorAll('.lang-card.active').length === 0;
+  const geoChart = document.getElementById('kwGeoChart');
+  if (geoChart) geoChart.style.display = noneSelected ? 'block' : 'none';
 }
 
 function renderStep(n){
