@@ -2158,9 +2158,10 @@ function buildKWLangPicker(){
 }
 
 function selectKWLang(code){
-  selectedKWLang = code;
+  const alreadyActive = selectedKWLang === code;
+  selectedKWLang = alreadyActive ? null : code;
   document.querySelectorAll('.kw-lang-btn').forEach(b => {
-    const isActive = b.dataset.kwlang === code;
+    const isActive = b.dataset.kwlang === selectedKWLang;
     b.classList.toggle('active', isActive);
     const check = b.querySelector('.kl-check');
     if (check) check.textContent = isActive ? '✓' : '';
