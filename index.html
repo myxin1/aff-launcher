@@ -370,8 +370,32 @@ select option{background:var(--surface)}
 .info-box strong{color:var(--accent)}
 
 /* ── Footer ── */
-footer{background:var(--header);border-top:1px solid var(--border);padding:16px 32px;text-align:center;font-size:.78rem;color:var(--dim)}
-footer strong{color:var(--accent)}
+/* ── Ads Banner ── */
+#adsBanner{display:none;background:var(--surface2);border-bottom:1px solid var(--border);padding:10px 32px;text-align:center}
+#adsBanner.visible{display:block}
+.ads-slot{display:inline-block;background:var(--border);border-radius:8px;color:var(--dim);font-size:.75rem;padding:8px 24px;min-width:728px;max-width:100%;text-align:center}
+
+/* ── Contact Section ── */
+#contact{background:var(--surface);border-top:1px solid var(--border);padding:48px 32px}
+.contact-inner{max-width:780px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.contact-text h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:900;color:var(--text);margin-bottom:6px;letter-spacing:-.02em}
+.contact-text p{font-size:.85rem;color:var(--muted);line-height:1.6;max-width:420px}
+.contact-links{display:flex;gap:10px;flex-wrap:wrap}
+.contact-link{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:50px;border:1.5px solid var(--border);color:var(--muted);font-size:.83rem;font-weight:600;text-decoration:none;transition:.2s;cursor:pointer;background:transparent;font-family:inherit}
+.contact-link:hover{border-color:var(--accent);color:var(--accent)}
+.contact-link.primary{background:var(--accent);color:var(--btn-primary-text);border-color:var(--accent)}
+.contact-link.primary:hover{filter:brightness(1.1)}
+
+/* ── Footer ── */
+footer{background:var(--header);border-top:1px solid var(--border);padding:28px 32px}
+.footer-inner{max-width:780px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.footer-brand{font-family:'Plus Jakarta Sans',sans-serif;font-size:.88rem;font-weight:800;color:var(--text)}
+.footer-brand span{color:var(--accent)}
+.footer-meta{font-size:.75rem;color:var(--dim);line-height:1.6;text-align:center}
+.footer-meta strong{color:var(--accent)}
+.footer-links{display:flex;gap:16px}
+.footer-link{font-size:.75rem;color:var(--dim);text-decoration:none;transition:.15s}
+.footer-link:hover{color:var(--accent)}
 
 /* ── Responsive ── */
 /* ── Section label ── */
@@ -511,7 +535,13 @@ footer strong{color:var(--accent)}
   .output-box{font-size:.75rem;padding:14px}
   .output-tab{padding:8px 12px;font-size:.78rem}
   /* Footer */
-  footer{padding:14px 16px}
+  footer{padding:20px 16px}
+  .footer-inner{flex-direction:column;text-align:center;gap:12px}
+  .footer-links{justify-content:center}
+  #contact{padding:32px 16px}
+  .contact-inner{flex-direction:column;text-align:center}
+  .contact-links{justify-content:center}
+  .ads-slot{min-width:unset;width:100%}
   /* Back to top */
   #toTop{bottom:16px;right:16px;width:38px;height:38px;font-size:1rem}
   /* brand mult row */
@@ -543,6 +573,18 @@ footer strong{color:var(--accent)}
   </div>
 </header>
 
+<!-- ═══════════════════════════════════════
+     ÁREA DE ANÚNCIOS
+     Para ativar: adicionar class "visible" ao #adsBanner
+     Substituir .ads-slot pelo código do Google AdSense ou banner próprio
+════════════════════════════════════════════ -->
+<div id="adsBanner">
+  <div class="ads-slot">📢 Espaço publicitário — 728×90</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     CONTEÚDO PRINCIPAL
+════════════════════════════════════════════ -->
 <div class="container">
 
   <!-- Progress -->
@@ -1003,7 +1045,38 @@ footer strong{color:var(--accent)}
 
 <button id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Ir ao topo">↑</button>
 
-<footer>Desenvolvido por <strong>Daniel</strong> · Affiliate Site Launcher v3.0 · 2026</footer>
+<!-- ═══════════════════════════════════════
+     ÁREA DE CONTATO
+════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-text">
+      <h3>Tem sugestões ou encontrou um bug?</h3>
+      <p>Este projeto está em desenvolvimento ativo. Feedback, ideias e melhorias são sempre bem-vindos.</p>
+    </div>
+    <div class="contact-links">
+      <a class="contact-link primary" href="mailto:contato@example.com">✉️ Enviar e-mail</a>
+      <a class="contact-link" href="https://github.com/myxin1/aff-launcher/issues" target="_blank">🐛 Reportar bug</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     RODAPÉ
+════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">Site &amp; Project <span>Launcher</span></div>
+    <div class="footer-meta">
+      Desenvolvido por <strong>Daniel</strong> · v3.2 · 2026<br>
+      Ferramenta gratuita para planejamento de sites afiliados
+    </div>
+    <div class="footer-links">
+      <a class="footer-link" href="https://github.com/myxin1/aff-launcher" target="_blank">GitHub</a>
+      <a class="footer-link" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">↑ Topo</a>
+    </div>
+  </div>
+</footer>
 
 <script>
 // ══════════════════════════════════════════════
