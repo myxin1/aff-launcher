@@ -80,6 +80,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 textarea{resize:vertical;min-height:80px}
 select option{background:var(--surface)}
 .hint{font-size:.75rem;color:var(--dim);margin-top:4px;line-height:1.4}
+.btn-gen-desc{margin-top:8px;background:var(--surface2);border:1px dashed var(--accent);color:var(--accent);border-radius:8px;padding:8px 14px;font-size:.8rem;font-weight:600;cursor:pointer;transition:.2s;text-align:left}
+.btn-gen-desc:hover{background:var(--accent-dim)}
+.desc-suggestion{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:.85rem;color:var(--text);cursor:pointer;transition:.2s;line-height:1.5}
+.desc-suggestion:hover{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
 .divider{border:none;border-top:1px solid var(--border);margin:20px 0}
 .field-badge{background:var(--accent-dim);color:var(--accent);border-radius:4px;padding:2px 7px;font-size:.72rem;font-weight:700;margin-left:6px}
 
@@ -558,6 +562,8 @@ footer strong{color:var(--accent)}
         <div class="field full">
           <label>Descrição Curta</label>
           <textarea id="productDesc" placeholder="Descrição extraída do site…" style="min-height:68px"></textarea>
+          <button type="button" class="btn-gen-desc" onclick="generateDescSuggestions()" id="btnGenDesc" style="display:none">✨ Gerar 3 novas descrições</button>
+          <div id="descSuggestions" style="display:none;margin-top:10px;flex-direction:column;gap:8px"></div>
         </div>
       </div>
 
@@ -2480,6 +2486,30 @@ function buildSEODesc(name, category, rawDesc, kw, bodyText){
   return `${n} é uma solução de ${c} para profissionais e empresas que buscam resultados reais online.${kwHint} Veja review completo, comparações, preços e alternativas.`;
 }
 
+function generateDescSuggestions() {
+  const name = document.getElementById('productName')?.value || 'este produto';
+  const cat  = document.getElementById('productCategory')?.value || 'ferramenta';
+  const kw   = document.getElementById('mainKW')?.value || name;
+
+  const suggestions = [
+    `${name} é a melhor ${cat} para quem quer ${kw}: veja review completo, preços atualizados e por que vale a pena antes de comprar.`,
+    `Tudo sobre ${kw}: como ${name} funciona, quanto custa, prós e contras — análise honesta para você decidir com segurança.`,
+    `Procurando a melhor opção de ${cat}? ${name} se destaca entre os concorrentes. Comparamos planos, recursos e alternativas para ${kw}.`
+  ];
+
+  const wrap = document.getElementById('descSuggestions');
+  wrap.innerHTML = suggestions.map(s =>
+    `<div class="desc-suggestion" onclick="pickDesc(this)">${s}</div>`
+  ).join('');
+  wrap.style.display = 'flex';
+}
+
+function pickDesc(el) {
+  document.getElementById('productDesc').value = el.textContent;
+  document.getElementById('descSuggestions').style.display = 'none';
+  onProductChange && onProductChange();
+}
+
 function fillAnalyzedFields(data, success){
   document.getElementById('productName').value     = data.name     || '';
   document.getElementById('productCategory').value = data.category || '';
@@ -2489,6 +2519,8 @@ function fillAnalyzedFields(data, success){
   const kw = document.getElementById('mainKW')?.value || '';
   const improvedDesc = buildSEODesc(data.name, data.category, data.desc, kw, data.bodySnippet || '');
   document.getElementById('productDesc').value = improvedDesc;
+  const btnDesc = document.getElementById('btnGenDesc');
+  if (btnDesc) btnDesc.style.display = 'block';
 
   // Badge
   const badge = document.getElementById('analyzedBadge');
